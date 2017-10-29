@@ -1,0 +1,13 @@
+<div *ngIf="hero">
+    <p>
+        id: {{hero.id}}
+    </p>
+    <p>
+        name: {{hero.name}}
+    </p>
+    <div>
+        <input [(ngModel)]="hero.name">
+        <button (click)="save()">save</button>
+    </div>
+
+</div>
