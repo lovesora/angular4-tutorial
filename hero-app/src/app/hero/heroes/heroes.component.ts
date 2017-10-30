@@ -9,8 +9,9 @@ import { Router, ActivatedRoute } from '@angular/router';
     styleUrls: ['./heroes.component.css']
 })
 export class HeroesComponent implements OnInit {
-    private heroes: Hero[];
-    private selectedHero: Hero;
+    heroName: string;
+    heroes: Hero[];
+    selectedHero: Hero;
 
     constructor(private heroService: HeroService, private router: Router, private route: ActivatedRoute) { }
 
