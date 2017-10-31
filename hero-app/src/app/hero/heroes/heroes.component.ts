@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Hero } from '../class/hero';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Hero } from '../class/hero.class';
 import { HeroService } from '../service/hero.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -10,14 +10,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class HeroesComponent implements OnInit {
     heroName: string;
-    heroes: Hero[];
+    @Input() heroes: Hero[];
     selectedHero: Hero;
+
+    @Output() detail: EventEmitter<Hero> = new EventEmitter();
 
     constructor(private heroService: HeroService, private router: Router, private route: ActivatedRoute) { }
 
     async ngOnInit() {
         try {
-            this.heroes = await this.heroService.getList();
+            // this.heroes = await this.heroService.getList();
         } catch(e) {
             this.heroes = [];
         }
@@ -35,6 +37,7 @@ export class HeroesComponent implements OnInit {
 
     onClickHero(hero: Hero): void {
         this.selectedHero = hero;
+        this.detail.emit(hero);
     }
 
     onClickDelete(hero: Hero): void {

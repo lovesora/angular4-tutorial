@@ -11,10 +11,13 @@ import { HeroComponent } from './hero/hero.component';
 import { HeroService } from './service/hero.service';
 import { HttpModule } from '@angular/http';
 import { NetModule } from '../net/net.module';
+import { StoreModule, StoreRootModule } from '@ngrx/store';
+import { reducers } from '../ngrx/store/index.class';
 
 @NgModule({
     imports: [
         CommonModule,
+        StoreModule.forRoot(reducers),
         HttpModule,
         FormsModule,
         InMemoryWebApiModule.forRoot(InMemoeryDataService),
@@ -23,7 +26,8 @@ import { NetModule } from '../net/net.module';
     declarations: [DashboardComponent, HeroesComponent, HeroDetailComponent, HeroComponent],
     providers: [HeroService, ...NetModule.services],
     exports: [
-        HeroRoutingModule
+        HeroRoutingModule,
+        HeroesComponent
     ]
 })
 export class HeroModule { }

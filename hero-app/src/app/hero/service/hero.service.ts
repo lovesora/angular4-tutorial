@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, RequestMethod } from '@angular/http';
+import { RequestOptions, RequestMethod } from '@angular/http';
 import { CompilerConfig } from '@angular/compiler';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Hero } from '../class/hero';
+import { Hero } from '../class/hero.class';
 import { HttpService } from '../../net/service/http.service';
 import { Api, ApiOptions } from '../../net/class/api.class';
 
@@ -33,7 +33,7 @@ export class HeroService {
         }
     );
 
-    constructor(private http: Http, private httpService: HttpService) { }
+    constructor(private httpService: HttpService) { }
 
     create(name: string): Promise<Hero> {
         return this.httpService
