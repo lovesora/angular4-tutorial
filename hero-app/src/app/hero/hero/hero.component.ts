@@ -13,7 +13,6 @@ export class HeroComponent implements OnInit {
 
     constructor(private httpService: HttpService) { }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
 }

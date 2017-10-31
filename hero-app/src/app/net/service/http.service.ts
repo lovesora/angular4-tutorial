@@ -1,53 +1,65 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Request, RequestMethod } from '@angular/http';
+import { Http, Headers, Request, RequestOptions } from '@angular/http';
 
 import _isEqual from 'lodash.isequal';
 import _cloneDeep from 'lodash.clonedeep';
 
 import 'rxjs/add/operator/toPromise';
+import { ReactiveFormsModule } from '@angular/forms';
 
-class RequestCache {
-    request: Request;
-    data: any;
+export class RequestCache {
+    constructor(public request: Request, public data: any) { }
+}
 
-    constructor(request: Request, data: any) {
-        this.request = request;
-        this.data = data;
+export class HttpOptions {
+    isFromCache: boolean;
+
+    constructor({
+        isFromCache = false
+    } = {}) {
+        this.isFromCache = isFromCache;
     }
 }
 
 @Injectable()
 export class HttpService {
     private _cache: RequestCache[] = [];
-    private _headers = new Headers({
-        'Content-Type': 'application/json'
-    });
+    private _requestOptions = new RequestOptions({
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    })
 
     constructor(private http: Http) { }
 
-    request(request: Request, restArgs: {} = {}, { isFromCache = false } = {} ): void {
-        let _request = _cloneDeep(request) as Request;
-        _request.headers = { ...this._headers, ..._request.headers } as Headers;
+    /**
+     *
+     * @param requestOptions
+     * @param param1
+     */
+    fetch(requestOptions: RequestOptions, { isFromCache}: HttpOptions = new HttpOptions() ): Promise<any> {
+        let _requestOptions = this._requestOptions.merge(requestOptions);
 
-        // 格式化rest风格url
-        for (let key in restArgs) {
-            _request.url = _request.url.replace(`:${key}`, restArgs[key]);
-        }
+        let _request = new Request(_requestOptions);
 
         // 获取缓存数据
-        let cache = this._cache.filter(v => _isEqual(v.request, request));
+        let cache = this._cache.filter(v => _isEqual(v.request, _request));
         if (isFromCache && cache.length > 0) {
-            return cache[0].data;
+            return Promise.resolve(cache[0].data);
         }
 
-        this.http.request(_request).toPromise().then(response => {
+        return this.http.request(_request).toPromise().then(response => {
             let result;
 
             if (response.ok && (response.status >= 200 && response.status < 300)) {
                 let json = response.json();
                 this._cache.push(new RequestCache(_request, _cloneDeep(json)));
                 result = json;
+            } else {
+                console.log(response);
+                throw response;
             }
+
             return result;
         }).catch(e => {
             console.log(e);
