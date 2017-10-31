@@ -10,6 +10,7 @@ import { InMemoeryDataService } from './service/in-memoery-data.service';
 import { HeroComponent } from './hero/hero.component';
 import { HeroService } from './service/hero.service';
 import { HttpModule } from '@angular/http';
+import { NetModule } from '../net/net.module';
 
 @NgModule({
     imports: [
@@ -20,7 +21,7 @@ import { HttpModule } from '@angular/http';
         HeroRoutingModule
     ],
     declarations: [DashboardComponent, HeroesComponent, HeroDetailComponent, HeroComponent],
-    providers: [HeroService],
+    providers: [HeroService, ...NetModule.services],
     exports: [
         HeroRoutingModule
     ]

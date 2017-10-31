@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpService } from '../../net/service/http.service';
+import { Request, RequestMethod } from '@angular/http';
+import { CompilerConfig } from '@angular/compiler';
 
 @Component({
     selector: 'app-hero',
@@ -8,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 export class HeroComponent implements OnInit {
     title = 'Hero Module';
 
-    constructor() { }
+    constructor(private httpService: HttpService) { }
 
     ngOnInit() {
     }
