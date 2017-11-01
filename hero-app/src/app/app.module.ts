@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { HeroModule } from './hero/hero.module';
 import { AppRoutingModule } from './app-routing.module';
 import { EmptyComponent } from './empty.component';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import { EmptyComponent } from './empty.component';
     imports: [
         BrowserModule,
         HeroModule,
+        MaterialModule,
         AppRoutingModule
     ],
     providers: [],
