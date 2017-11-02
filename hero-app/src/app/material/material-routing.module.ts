@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialComponent } from './material.component';
+import { TableExampleComponent } from './table/table-example.component';
 import { TableComponent } from './table/table.component';
 
 const routes: Routes = [{
@@ -8,7 +9,8 @@ const routes: Routes = [{
     component: MaterialComponent,
     children: [{
         path: 'table',
-        component: TableComponent
+        // component: TableComponent
+        component: TableExampleComponent
     }]
 }]
 

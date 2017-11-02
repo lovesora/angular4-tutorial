@@ -1,11 +1,34 @@
-@import '~@angular/material/theming';
+@import '../../../styles/material.scss';
 
-.mat-table {
-    &-search {
-        margin: 16px 0 0 16px;
+@mixin _mat-table-theme($theme) {
+    $foreground: map-get($theme, foreground);
+    $backgorund: map-get($theme, background);
+    .mat-table-addon {
+        position: relative;
+
+        &__search {
+            margin: 24px 0 0 24px;
+        }
+        &__add {
+            position: absolute;
+            right: 48px;
+            bottom: -20px;
+        }
+    }
+    .mat-header {
+        &-row {
+            border-top: 1px solid map-get($foreground, divider);
+        }
+        &-cell {
+            text-align: center;
+        }
+    }
+    .mat-row:hover {
+        background-color: map-get($backgorund, hover);
+    }
+    .mat-cell {
+        text-align: center;
     }
 }
 
-mat-row:hover {
-    background-color: mat-color($mat-grey, 100);
-}
+@include _mat-table-theme($app-theme);

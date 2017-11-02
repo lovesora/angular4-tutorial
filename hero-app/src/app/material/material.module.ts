@@ -1,28 +1,36 @@
-import { MatTableModule, MatPaginatorModule, MatInputModule } from '@angular/material';
-
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MaterialRoutingModule } from './material-routing.module';
 import { MaterialComponent } from './material.component';
 import { TableComponent } from "./table/table.component";
+import { TableExampleComponent } from './table/table-example.component';
 
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule, MatPaginatorModule, MatInputModule, MatButtonModule, MatIconModule, MatMenuModule } from '@angular/material';
+
+let MatModules = [
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+];
 
 @NgModule({
     declarations: [
         MaterialComponent,
-        TableComponent
+        TableComponent,
+        TableExampleComponent
     ],
     imports: [
         MaterialRoutingModule,
-        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatInputModule,
-    ],
+    ].concat(MatModules),
     exports: [
         MaterialRoutingModule
     ]
