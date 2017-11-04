@@ -1,42 +1,78 @@
-<div class="mat-elevation-z8">
-    <div class="mat-table-addon">
-        <mat-form-field class="mat-table-addon__search">
-            <input [formControl]="matTableSearch" matInput placeholder="搜索">
-        </mat-form-field>
-        <button mat-mini-fab color="primary" class="mat-table-addon__add">
-            <mat-icon>add</mat-icon>
-        </button>
+<div class="mat-table__container mat-elevation-z8">
+    <!-- 标题 -->
+    <div class="mat-table__edit-title" [@showHidden]="_animationState.title">
+        <h3>{{_state.action === _TableAction.ADD ? '创建' : _state.action === _TableAction.UPDATE ? '修改' : ''}}</h3>
     </div>
 
+    <!-- 添加按钮 -->
+    <button (click)="onClickAdd()" mat-mini-fab color="primary" class="mat-table__add" [@iconBtn]="_animationState.iconBtn" [disabled]="_state.action === _TableAction.LIST && option.table.addOption.disabled">
+        <mat-icon *ngIf="_state.action === _TableAction.LIST">add</mat-icon>
+        <mat-icon *ngIf="_state.action === _TableAction.ADD">keyboard_arrow_left</mat-icon>
+    </button>
 
-    <mat-table #table [dataSource]="dataSource">
-        <div *ngFor="let col of state.table.colDef">
-            <ng-container [ngSwitch]="col.constructor.name" [matColumnDef]="col.col">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>{{col.header}}</mat-header-cell>
-                <div *ngSwitchCase="'TableOptColDefOption'">
-                    <mat-cell *matCellDef="let element">
-                        <button mat-icon-button [matMenuTriggerFor]="menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu">
-                            <button *ngFor="let item of col.menus" mat-menu-item (click)="item.onClick(element);">
-                                <mat-icon>{{item.icon}}</mat-icon>
-                                <span>{{item.text}}</span>
+
+    <!-- 搜索 -->
+    <div class="mat-table__addon">
+        <mat-form-field class="mat-table__addon-search" [@showHidden]="_animationState.search">
+            <input [formControl]="matTableSearch" matInput placeholder="搜索">
+        </mat-form-field>
+    </div>
+
+    <!-- 表格 -->
+    <div class="mat-table__table" [@collapseExpanded]="_animationState.table" [@showHidden]="_animationState.search">
+        <!-- material表格 -->
+        <mat-table #table [dataSource]="dataSource">
+            <div *ngFor="let col of option.table.colDef">
+                <ng-container [ngSwitch]="col.constructor.name" [matColumnDef]="col.col">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{col.header}}</mat-header-cell>
+                    <div *ngSwitchCase="'TableOptColDefOption'">
+                        <mat-cell *matCellDef="let element">
+                            <button mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
-                    </mat-cell>
-                </div>
-                <div *ngSwitchDefault>
-                    <mat-cell *matCellDef="let element">{{element[col.col]}}</mat-cell>
-                </div>
-            </ng-container>
+                            <mat-menu #menu="matMenu">
+                                <button *ngFor="let item of col.menus" mat-menu-item (click)="item.onClick(element);">
+                                    <mat-icon>{{item.icon}}</mat-icon>
+                                    <span>{{item.text}}</span>
+                                </button>
+                            </mat-menu>
+                        </mat-cell>
+                    </div>
+                    <div *ngSwitchDefault>
+                        <mat-cell *matCellDef="let element">{{element[col.col]}}</mat-cell>
+                    </div>
+                </ng-container>
+            </div>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+
+        <!-- 空数据 -->
+        <div *ngIf="!(state | async).paginator.length" class="mat-table__no-data">
+            暂无数据
         </div>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
+        <!-- 页脚 -->
+        <mat-paginator #paginator [length]="(state | async).paginator.length" [pageIndex]="option.paginator.pageIndex" [pageSize]="option.paginator.pageSize"
+            [pageSizeOptions]="option.paginator.pageSizeOptions">
+        </mat-paginator>
+    </div>
 
-    <mat-paginator #paginator [length]="state.paginator.length" [pageIndex]="state.paginator.pageIndex" [pageSize]="state.paginator.pageSize"
-        [pageSizeOptions]="state.paginator.pageSizeOptions">
-    </mat-paginator>
+    <div class="mat-table-edit__container" [@collapseExpanded]="_animationState.edit" [@showHidden]="_animationState.title">
+        <div class="mat-table-edit__input">
+            <div *ngFor="let col of option.table.colDef">
+                <div *ngIf="col.editOption">
+                    <div [ngSwitch]="col.editOption.type">
+                        <div *ngSwitchCase="_TableEditColType.INPUT">
+                            <mat-form-field>
+                                <input [(ngModel)]="_state.forms[col.col]" matInput placeholder="{{col.editOption.placeholder}}">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button (click)="onClickOK()" mat-raised-button color="primary">确认</button>
+        </div>
+    </div>
+
 </div>

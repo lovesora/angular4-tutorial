@@ -4,6 +4,7 @@ import { Hero } from './hero/class/hero.class';
 import { State } from './ngrx/store/index.class';
 import { selectHeroes } from './ngrx/reducer/hero.reducer';
 import { HeroCreate } from './ngrx/action/hero.action';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent {
     title = 'Hero v0.0.2';
     heroes$ = this.store.select(selectHeroes);
 
-    constructor(private store: Store<State>) { }
+    constructor(private store: Store<State>) {
+    }
 
     onClickDetail = event => {
         this.store.dispatch(new HeroCreate({ ...event, id: event.id << 1 }));

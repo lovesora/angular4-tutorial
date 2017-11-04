@@ -1,8 +1,11 @@
 import { Component } from "@angular/core";
+import { SearchArray, SearchOption, SearchType, SearchRule } from "../../common/ext/array-search.ext";
+import { TableComponentOption, TableOption, TableColDefOption, TableOptColDefOption, TableRowMenuOption, PaginatorOption, TableEditColOption, TableAddOption } from "./class/table-option.class";
+import { TableComponentState, TableState, TablePaginatorState, TableComponentStateChange } from "./class/table-state.class";
+
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { TableComponentOption, TableOption, TableColDefOption, TableOptColDefOption, PaginatorOption, TableComponentStateChange, TableRowMenuOption } from "./table.component";
-import { SearchArray, SearchOption, SearchType, SearchRule } from "../../common/ext/array-search.ext";
+import 'rxjs/add/observable/of';
 
 export interface Element {
     name: string;
@@ -10,6 +13,7 @@ export interface Element {
     weight: number;
     symbol: string;
 }
+
 const _data: Element[] = [
     { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
     { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
@@ -32,25 +36,26 @@ const _data: Element[] = [
     { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
     { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
 ];
+const searchArray = new SearchArray(_data);
 
 
 @Component({
-    template: '<mat-table-component [tableComponentOption]="tableComponentOption" (stateChange)="onStateChange($event)"></mat-table-component>'
+    template: '<mat-table-component [option]="tableOption" [state]="tableState" (stateChange)="onStateChange($event)"></mat-table-component>'
 })
 
 export class TableExampleComponent {
-    tableComponentOption: BehaviorSubject<TableComponentOption<Element>>;
-    searchArray = new SearchArray(_data);
+    tableOption: TableComponentOption;
+    tableState: BehaviorSubject<TableComponentState<Element>>;
+
 
     constructor() {
-        this.tableComponentOption = new BehaviorSubject(new TableComponentOption(
+        this.tableOption = new TableComponentOption(
             new TableOption(
-                _data,
                 [
-                    new TableColDefOption('position', 'No.'),
-                    new TableColDefOption('name', 'Name'),
-                    new TableColDefOption('weight', 'Weight'),
-                    new TableColDefOption('symbol', 'Symbol'),
+                    new TableColDefOption('position', 'No.', true, new TableEditColOption('No.')),
+                    new TableColDefOption('name', 'Name', true, new TableEditColOption('Name')),
+                    new TableColDefOption('weight', 'Weight', true, new TableEditColOption('Weight')),
+                    new TableColDefOption('symbol', 'Symbol', true, new TableEditColOption('Symbol')),
                     new TableOptColDefOption('Opt', [
                         new TableRowMenuOption(
                             'dialpad',
@@ -74,25 +79,40 @@ export class TableExampleComponent {
                             }
                         ),
                     ]),
-                ]
+                ],
+                new TableAddOption(
+                    false,
+                    function(data) {
+                        console.log(data);
+                    }
+                )
             ),
-            new PaginatorOption(_data.length, 5, 0, [5, 10])
-        ));
+            new PaginatorOption(5, 0, [5, 10])
+        );
+
+        this.tableState = new BehaviorSubject(new TableComponentState(
+            new TableState(
+                _data
+            ),
+            new TablePaginatorState(
+                _data.length
+            )
+        ))
     }
 
     onStateChange(stateChange: TableComponentStateChange) {
-        let option = this.tableComponentOption.value;
-        let data = this.searchArray.search([
+        let state = this.tableState.value;
+        let data = searchArray.search([
             new SearchOption(
                 new SearchRule(
-                    stateChange.search
+                    stateChange.table.search
                 )
             )
         ]);
 
-        option.paginator.length = data.length;
-        option.table.data = data.slice(stateChange.pageIndex * stateChange.pageSize, (stateChange.pageIndex + 1) * stateChange.pageSize);
+        state.paginator.length = data.length;
+        state.table.data = data.slice(stateChange.paginator.pageIndex * stateChange.paginator.pageSize, (stateChange.paginator.pageIndex + 1) * stateChange.paginator.pageSize);
 
-        this.tableComponentOption.next(option);
+        this.tableState.next(state);
     }
 }

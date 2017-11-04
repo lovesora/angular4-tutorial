@@ -1,24 +1,64 @@
 @import '../../../styles/material.scss';
-
 @mixin _mat-table-theme($theme) {
     $foreground: map-get($theme, foreground);
     $backgorund: map-get($theme, background);
-    .mat-table-addon {
-        position: relative;
-
-        &__search {
-            margin: 24px 0 0 24px;
+    .mat-table {
+        &__container {
+            position: relative;
         }
+        &__table {
+            overflow: hidden;
+        }
+
+        // 表格扩展内容
+        &__addon {
+            height: 90px;
+            border-bottom: 1px solid map-get($foreground, divider);
+
+            &-search {
+                margin: 24px 0 0 24px;
+                transition: display 1s;
+            }
+        }
+        // 表格无数据时显示内容
+        &__no-data {
+            text-align: center;
+            padding: 16px;
+            border-bottom: 1px solid map-get($foreground, divider);
+            color: map-get($foreground, disabled-text);
+        }
+        // 添加按钮
         &__add {
             position: absolute;
-            right: 48px;
-            bottom: -20px;
+            right: 64px;
+            top: 70px;
+            z-index: 100;
+        }
+        // 编辑时的标题
+        &__edit-title {
+            position: absolute;
+            left: 72px;
+            top: 16px;
+            color: map-get($foreground, text);
+        }
+
+        &-edit {
+            &__container {
+                padding: 24px;
+                overflow: hidden;
+            }
+            &__input {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                mat-form-field {
+                    width: 100%;
+                }
+            }
         }
     }
     .mat-header {
-        &-row {
-            border-top: 1px solid map-get($foreground, divider);
-        }
         &-cell {
             text-align: center;
         }
