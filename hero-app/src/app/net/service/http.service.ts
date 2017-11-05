@@ -5,7 +5,6 @@ import _isEqual from 'lodash.isequal';
 import _cloneDeep from 'lodash.clonedeep';
 
 import 'rxjs/add/operator/toPromise';
-import { ReactiveFormsModule } from '@angular/forms';
 
 export class RequestCache {
     constructor(public request: Request, public data: any) { }

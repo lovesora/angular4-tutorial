@@ -10,15 +10,6 @@ import { TableExampleComponent } from './table/table-example.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule, MatPaginatorModule, MatInputModule, MatButtonModule, MatIconModule, MatMenuModule } from '@angular/material';
 
-let MatModules = [
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-];
 
 @NgModule({
     declarations: [
@@ -30,9 +21,18 @@ let MatModules = [
         MaterialRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-    ].concat(MatModules),
+
+        BrowserAnimationsModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+    ],
     exports: [
-        MaterialRoutingModule
+        MaterialRoutingModule,
+        TableComponent
     ]
 })
 
