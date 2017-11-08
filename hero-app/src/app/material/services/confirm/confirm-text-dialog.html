@@ -1,0 +1,11 @@
+<div class="mat-dialog-basis__container">
+    <h2 mat-dialog-title class="mat-dialog-basis__title">{{data.title}}</h2>
+    <mat-dialog-content>
+        <div class="mat-dialog-basis__content">
+            {{data.content}}
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions class="mat-dialog-actions__right">
+        <button mat-raised-button color="primary" [mat-dialog-close]="true" tabindex="-1">确认</button>
+    </mat-dialog-actions>
+</div>

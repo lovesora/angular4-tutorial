@@ -1,0 +1,14 @@
+<div class="mat-dialog-basis__container">
+    <h2 mat-dialog-title>{{data.title}}</h2>
+    <mat-dialog-content>
+        <div *ngFor="let input of data.inputs">
+            <mat-form-field class="mat-dialog-basis__input">
+                <input [(ngModel)]="inputValues[input.name]" [disabled]="input.disabled" matInput placeholder="{{input.placeholder}}">
+            </mat-form-field>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions class="mat-dialog-actions__around">
+        <button mat-button [mat-dialog-close]="false">取消</button>
+        <button mat-raised-button color="primary" [mat-dialog-close]="inputValues" tabindex="-1">确认</button>
+    </mat-dialog-actions>
+</div>

@@ -1,41 +1,57 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MaterialRoutingModule } from './material-routing.module';
-import { MaterialComponent } from './material.component';
 import { TableComponent } from "./table/table.component";
-import { TableExampleComponent } from './table/table-example.component';
+import { ConfirmDialogService, ConfirmInputDialog, ConfirmTextDialog } from './services/confirm/confirm.component';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule, MatPaginatorModule, MatInputModule, MatButtonModule, MatIconModule, MatMenuModule } from '@angular/material';
-
+import { MatTableModule, MatPaginatorModule, MatInputModule, MatButtonModule, MatIconModule, MatMenuModule, MatDialogModule, MatSortModule } from '@angular/material';
+import { DialogTableService, DialogTable } from './services/dialog-table/dialog-table.component';
+import { DetailComponent } from './detail/detail.component';
+import { DialogDetail, DialogDetailService } from './services/dialog-detail/dialog-detail.component';
 
 @NgModule({
     declarations: [
-        MaterialComponent,
         TableComponent,
-        TableExampleComponent
+        DetailComponent,
+        ConfirmInputDialog,
+        ConfirmTextDialog,
+        DialogTable,
+        DialogDetail,
     ],
     imports: [
-        MaterialRoutingModule,
         FormsModule,
         ReactiveFormsModule,
 
+
+        // prod模式下不能使用concat
         BrowserAnimationsModule,
         MatTableModule,
+        MatSortModule,
         MatPaginatorModule,
         MatInputModule,
         MatButtonModule,
         MatIconModule,
         MatMenuModule,
+        MatDialogModule,
+    ],
+    providers: [
+        ConfirmDialogService,
+        DialogTableService,
+        DialogDetailService,
     ],
     exports: [
-        MaterialRoutingModule,
-        TableComponent
+        TableComponent,
+        DetailComponent,
+    ],
+    entryComponents: [
+        ConfirmInputDialog,
+        ConfirmTextDialog,
+        DialogTable,
+        DialogDetail,
     ]
 })
 
 export class MaterialModule {
-
 }

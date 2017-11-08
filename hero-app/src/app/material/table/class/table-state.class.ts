@@ -5,19 +5,19 @@ import { CollapseExpandedAnimationState } from "../animation/cllapseExpanded";
 // ^------------------ Table Component State ------------------
 export class TableState<T> {
     constructor(
-        public data: T[],
+        public data: T[] = [],
         public action: _TableAction = _TableAction.LIST
     ) { }
 }
 export class TablePaginatorState {
     constructor(
-        public length: number
+        public length: number = 0,
     ) { }
 }
 export class TableComponentState<T> {
     constructor(
-        public table: TableState<T>,
-        public paginator: TablePaginatorState
+        public table: TableState<T> = new TableState(),
+        public paginator: TablePaginatorState = new TablePaginatorState(),
     ) { }
 }
 // ^------------------ Table Component State ------------------

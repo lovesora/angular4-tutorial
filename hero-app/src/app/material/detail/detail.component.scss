@@ -1,0 +1,39 @@
+@import '../../../styles/material.scss';
+
+@mixin mat-detail ($theme) {
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+
+    .mat-detail {
+        &__container {
+            background-color: map-get($background, background);
+            border: 1px solid map-get($foreground, divider);
+            border-bottom: 0;
+        }
+
+        &__item {
+            display: flex;
+
+            &-key {
+                padding: 4px 16px;
+
+                flex-basis: 150px;
+                background-color: mat-color(map-get($theme, primary), .5);
+                color: map-get($foreground, text);
+
+                border-right: 1px solid map-get($foreground, divider);
+                border-bottom: 1px solid map-get($foreground, divider);
+            }
+
+            &-value {
+                padding: 4px 16px;
+
+                color: map-get($foreground, text);
+                flex-grow: 1;
+                border-bottom: 1px solid map-get($foreground, divider);
+            }
+        }
+    }
+}
+
+@include mat-detail($app-theme);

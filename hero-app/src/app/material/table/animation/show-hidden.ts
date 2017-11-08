@@ -1,6 +1,6 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-
 import { config } from './config';
+
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 export enum ShowHiddenAnimationState {
     SHOW = 'show',

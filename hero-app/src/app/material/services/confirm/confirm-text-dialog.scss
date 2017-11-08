@@ -1,0 +1,8 @@
+@import '../../../../styles/material.scss';
+
+.mat-dialog-basis {
+    &__title {
+        text-align: center;
+        color: mat-color(map-get($app-theme, primary));
+    }
+}

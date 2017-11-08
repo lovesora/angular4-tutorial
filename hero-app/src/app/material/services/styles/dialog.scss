@@ -1,0 +1,15 @@
+.mat-dialog {
+    &-actions {
+        &__around {
+            justify-content: space-around;
+        }
+
+        &__right {
+            flex-direction: row-reverse;
+        }
+    }
+
+    &__no-overlay {
+        background-color: transparent;
+    }
+}

@@ -1,25 +1,28 @@
-import { Component, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, OnInit, Input, Inject, Output, EventEmitter } from '@angular/core';
 import { NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { DataSource } from '@angular/cdk/collections';
 
-import { MatPaginator } from '@angular/material';
+import { MatPaginator, MatSort } from '@angular/material';
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
 
 import _forEach from 'lodash.foreach';
 
 import { TableComponentOption, TableEditColType } from './class/table-option.class';
 import { TableComponentState, TableComponentStateChange, TablePaginatorStateChange, TablePaginatorState, TableStateChange, _TableComponentState, _TableAction, _TableAnimationState } from './class/table-state.class';
-import { animations } from './animation/animations';
-import { ShowHiddenAnimationState } from './animation/show-hidden';
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { animations } from './animation/animations';
+import { ShowHiddenAnimationState } from './animation/show-hidden';
 import { IconBtnAnimationState } from './animation/icon-btn';
 import { CollapseExpandedAnimationState } from './animation/cllapseExpanded';
+
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Component({
@@ -60,7 +63,7 @@ export class TableComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
 
-    constructor() {
+    constructor(@Inject(DomSanitizer) public sanitizer: DomSanitizer) {
         this._state = new _TableComponentState(_TableAction.LIST);
         this._animationState = new _TableAnimationState();
     }
@@ -91,15 +94,20 @@ export class TableComponent implements OnInit {
         /**
          * 初始化
          */
+        // 中文替换
         document.querySelector('.mat-paginator-page-size-label').textContent = '每页行数：';
+        // 禁用搜索
+        !this.option.table.searchable && this.matTableSearch.disable()
+        // 发送初始搜索
         this.stateChange.emit(new TableComponentStateChange(
-            new TableStateChange(''),
+            new TableStateChange(this.option.table.searchValue),
             new TablePaginatorStateChange(this.option.paginator.pageSize, this.option.paginator.pageIndex))
         );
     }
 
     valueChange(): Observable<TableComponentStateChange> {
         return Observable.merge(this.matTableSearch.valueChanges, this.paginator.page)
+            .debounceTime(500)
             .map(() => {
                 let search = this.matTableSearch.value ? this.matTableSearch.value.split(' ').filter(v => !!v) : '';
                 return new TableComponentStateChange(
@@ -109,8 +117,13 @@ export class TableComponent implements OnInit {
             });
     }
 
-    private _animationStateChange() {
+    private _animationStateChange(action: _TableAction) {
+        this._state.action = action;
+
         switch (this._state.action) {
+            case _TableAction.UPDATE: {
+
+            }
             case _TableAction.ADD: {
                 this._animationState.search = ShowHiddenAnimationState.HIDDEN;
                 this._animationState.title = ShowHiddenAnimationState.SHOW;
@@ -139,22 +152,45 @@ export class TableComponent implements OnInit {
 
     onClickAdd() {
         switch (this._state.action) {
+            case _TableAction.UPDATE:
             case _TableAction.ADD: {
-                this._state.action = _TableAction.LIST;
-
+                this._animationStateChange(_TableAction.LIST);
                 break;
             }
             case _TableAction.LIST: {
-                this._state.action = _TableAction.ADD;
-
+                this._animationStateChange(_TableAction.ADD);
                 break;
             }
         }
-        this._animationStateChange();
+
     }
 
     onClickOK() {
-        this.option.table.addOption.click(this._state.forms);
+        switch (this._state.action) {
+            case _TableAction.UPDATE: {
+                this.option.table.updateOption.click(this._state.forms)
+                    .subscribe(isSuccess => {
+                        isSuccess && this._animationStateChange(_TableAction.LIST);
+                    })
+                break;
+            }
+            case _TableAction.ADD: {
+                this.option.table.addOption.click(this._state.forms)
+                    .subscribe(isSuccess => {
+                        isSuccess && this._animationStateChange(_TableAction.LIST);
+                    })
+            }
+        }
+    }
+
+    public openUpdate(row) {
+        this.option.table.colDef.map(col => {
+            if (col.editOption) {
+                this._state.forms[col.col] = row[col.col];
+            }
+        })
+
+        this._animationStateChange(_TableAction.UPDATE);
     }
 }
 

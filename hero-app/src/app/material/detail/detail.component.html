@@ -1,0 +1,14 @@
+<div class="mat-detail__container">
+    <div *ngIf="option.header" class="mat-detail__header">
+        <h3 class="mat-detail__title">{{option.header.title}}</h3>
+    </div>
+    <div class="mat-detail__content">
+        <div *ngFor="let item of option.data" class="mat-detail__item">
+            <div class="mat-detail__item-key">{{item.key}}</div>
+            <div class="mat-detail__item-value">{{item.value}}</div>
+        </div>
+    </div>
+    <div *ngIf="option.footer" class="mat-detail__footer">
+        {{option.footer}}
+    </div>
+</div>
