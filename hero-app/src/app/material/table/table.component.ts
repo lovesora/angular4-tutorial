@@ -141,7 +141,6 @@ export class TableComponent implements OnInit {
                 this._animationState.table = CollapseExpandedAnimationState.EXPANDED;
                 this._animationState.edit = CollapseExpandedAnimationState.COLLAPSE;
 
-
                 _forEach(this._state.forms, (v, k) => {
                     this._state.forms[k] = null;
                 });

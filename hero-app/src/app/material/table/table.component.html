@@ -51,8 +51,12 @@
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
 
+        <div *ngIf="(state | async).table.isLoading" class="mat-table__loading">
+            <mat-spinner [diameter]="50" ></mat-spinner>
+        </div>
+
         <!-- 空数据 -->
-        <div *ngIf="!(state | async).paginator.length" class="mat-table__no-data">
+        <div *ngIf="!(state | async).paginator.length && !(state | async).table.isLoading" class="mat-table__no-data">
             暂无数据
         </div>
 

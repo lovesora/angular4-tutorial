@@ -5,6 +5,10 @@ import _isEqual from 'lodash.isequal';
 import _cloneDeep from 'lodash.clonedeep';
 
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/switchMap';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+
 
 export class RequestCache {
     constructor(public request: Request, public data: any) { }
@@ -36,7 +40,7 @@ export class HttpService {
      * @param requestOptions
      * @param param1
      */
-    fetch(requestOptions: RequestOptions, { isFromCache}: HttpOptions = new HttpOptions() ): Promise<any> {
+    fetch(requestOptions: RequestOptions, { isFromCache}: HttpOptions = new HttpOptions() ): Observable<any> {
         let _requestOptions = this._requestOptions.merge(requestOptions);
 
         let _request = new Request(_requestOptions);
@@ -44,10 +48,10 @@ export class HttpService {
         // 获取缓存数据
         let cache = this._cache.filter(v => _isEqual(v.request, _request));
         if (isFromCache && cache.length > 0) {
-            return Promise.resolve(cache[0].data);
+            return Observable.of(cache[0].data);
         }
 
-        return this.http.request(_request).toPromise().then(response => {
+        return this.http.request(_request).switchMap(response => {
             let result;
 
             if (response.ok && (response.status >= 200 && response.status < 300)) {
@@ -59,10 +63,7 @@ export class HttpService {
                 throw response;
             }
 
-            return result;
-        }).catch(e => {
-            console.log(e);
-            throw e;
+            return Observable.of(result);
         });
     }
 }

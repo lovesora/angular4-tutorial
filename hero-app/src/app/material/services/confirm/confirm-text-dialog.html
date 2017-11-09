@@ -5,7 +5,17 @@
             {{data.content}}
         </div>
     </mat-dialog-content>
-    <mat-dialog-actions class="mat-dialog-actions__right">
-        <button mat-raised-button color="primary" [mat-dialog-close]="true" tabindex="-1">确认</button>
-    </mat-dialog-actions>
+    <div [ngSwitch]="data.actionType">
+        <div *ngSwitchCase="ConfirmActionType.RIGHT">
+            <mat-dialog-actions class="mat-dialog-actions__right">
+                <button mat-raised-button color="primary" [mat-dialog-close]="true" tabindex="-1">确认</button>
+            </mat-dialog-actions>
+        </div>
+        <div *ngSwitchDefault>
+            <mat-dialog-actions class="mat-dialog-actions__around">
+                <button mat-button [mat-dialog-close]="false">取消</button>
+                <button mat-raised-button color="primary" [mat-dialog-close]="true" tabindex="-1">确认</button>
+            </mat-dialog-actions>
+        </div>
+    </div>
 </div>

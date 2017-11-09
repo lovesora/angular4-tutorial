@@ -6,7 +6,8 @@ import { CollapseExpandedAnimationState } from "../animation/cllapseExpanded";
 export class TableState<T> {
     constructor(
         public data: T[] = [],
-        public action: _TableAction = _TableAction.LIST
+        public isLoading: boolean = false,
+        public action: _TableAction = _TableAction.LIST,
     ) { }
 }
 export class TablePaginatorState {

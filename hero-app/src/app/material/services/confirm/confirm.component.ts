@@ -11,9 +11,14 @@ export interface ConfirmInputDialogOption {
         disabled?: boolean,
     } []
 }
+export enum ConfirmActionType {
+    AROUND,
+    RIGHT
+}
 export interface ConfirmTextDialogOption {
     title?: string;
     content?: string;
+    actionType?: ConfirmActionType;
 }
 
 @Injectable()
@@ -40,6 +45,7 @@ export class ConfirmDialogService {
             data: {
                 title: option.title,
                 content: option.content,
+                actionType: option.actionType,
             },
             backdropClass: 'mat-dialog__no-overlay',
         });
@@ -70,6 +76,8 @@ export class ConfirmInputDialog {
     templateUrl: './confirm-text-dialog.html',
 })
 export class ConfirmTextDialog {
+    ConfirmActionType = ConfirmActionType;
+
     constructor(
         public dialogRef: MatDialogRef<ConfirmTextDialog>,
         @Inject(MAT_DIALOG_DATA) public data: any
